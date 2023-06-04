@@ -1,0 +1,82 @@
+[gd_scene load_steps=8 format=3 uid="uid://ywx534137r3a"]
+
+[ext_resource type="Texture2D" uid="uid://cofuivyaewvoh" path="res://sprites/tilesets/walls/wooden_door_b.png" id="1_6ygpm"]
+[ext_resource type="Script" path="res://scripts/door_component.gd" id="1_h6f3h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k7lhp"]
+size = Vector2(27, 4)
+
+[sub_resource type="Animation" id="Animation_p2fvw"]
+resource_name = "open"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_lkhwn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_wt6eu"]
+resource_name = "close"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_neoto"]
+_data = {
+"RESET": SubResource("Animation_lkhwn"),
+"close": SubResource("Animation_wt6eu"),
+"open": SubResource("Animation_p2fvw")
+}
+
+[node name="DoorComponent" type="Area2D" node_paths=PackedStringArray("_animation")]
+z_index = 1
+script = ExtResource("1_h6f3h")
+_animation = NodePath("Animation")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_6ygpm")
+hframes = 2
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10)
+shape = SubResource("RectangleShape2D_k7lhp")
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_neoto")
+}
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="animation_finished" from="Animation" to="." method="_on_animation_animation_finished"]
